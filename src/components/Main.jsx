@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import PostModal from "./PostModal";
 import { connect } from "react-redux";
-import { getArticlesAPI, updateArticleLikes, addCommentAPI, deleteArticleAPI } from "../actions"; 
+import {
+  getArticlesAPI,
+  updateArticleLikes,
+  addCommentAPI,
+  deleteArticleAPI,
+} from "../actions";
 import ReactPlayer from "react-player";
 import { useNavigate } from "react-router-dom";
 
@@ -49,14 +54,18 @@ const Main = (props) => {
   };
 
   const handleCommentSubmit = (articleId) => {
-    props.addComment(articleId, commentText, props.user.email, props.user.photoURL);
+    props.addComment(
+      articleId,
+      commentText,
+      props.user.email,
+      props.user.photoURL
+    );
     setCommentText("");
   };
-  
+
   const toggleComments = (articleId) => {
     setExpandedArticleId(expandedArticleId === articleId ? null : articleId);
   };
-
 
   const handleDelete = (articleId) => {
     props.deleteArticle(articleId);
@@ -64,18 +73,18 @@ const Main = (props) => {
 
   const handleShare = (article) => {
     if (navigator.share) {
-      navigator.share({
-        title: article.title,
-        text: article.description,
-        url: window.location.href, 
-      })
-      .then(() => console.log('Article shared successfully'))
-      .catch((error) => console.error('Error sharing article:', error));
+      navigator
+        .share({
+          title: article.title,
+          text: article.description,
+          url: window.location.href,
+        })
+        .then(() => console.log("Article shared successfully"))
+        .catch((error) => console.error("Error sharing article:", error));
     } else {
-      alert('Web Share API is not supported in your browser.');
+      alert("Web Share API is not supported in your browser.");
     }
   };
-  
 
   return (
     <>
@@ -103,7 +112,7 @@ const Main = (props) => {
 
             <button>
               <img src="/images/post-video-icon.svg" alt="" />
-              <span>Video</span>
+              <span>Videos</span>
             </button>
 
             <button>
@@ -133,8 +142,10 @@ const Main = (props) => {
                         </span>
                       </div>
                     </a>
-                    <button  onClick={() => handleDelete(article.id)}
-                          disabled={props.user.email !== article.actor.description}>
+                    <button
+                      onClick={() => handleDelete(article.id)}
+                      disabled={props.user.email !== article.actor.description}
+                    >
                       <img src="/images/bin.svg" alt="" />
                     </button>
                   </SharedActor>
@@ -157,8 +168,8 @@ const Main = (props) => {
                     </li>
                     <li>
                       <button>
-                      <img src = "/images/comment-image.svg"/>
-                      <a>{article.comments.length}</a>
+                        <img src="/images/comment-image.svg" />
+                        <a>{article.comments.length}</a>
                       </button>
                     </li>
                   </SocialCounts>
@@ -198,12 +209,21 @@ const Main = (props) => {
                         {console.log(article.comments)}
                         {article.comments.map((comment, index) => (
                           <Comment key={index}>
-                          <img src={comment.userImage} onClick={() => handleUserClick(comment.userEmail)} />
-                          <div>
-                            <span onClick={() => handleUserClick(comment.userEmail)}>{comment.username}</span>
-                            <p>{comment.comment}</p>
-                          </div>
-                        </Comment>
+                            <img
+                              src={comment.userImage}
+                              onClick={() => handleUserClick(comment.userEmail)}
+                            />
+                            <div>
+                              <span
+                                onClick={() =>
+                                  handleUserClick(comment.userEmail)
+                                }
+                              >
+                                {comment.username}
+                              </span>
+                              <p>{comment.comment}</p>
+                            </div>
+                          </Comment>
                         ))}
                       </CommentsList>
                     </CommentSection>
@@ -239,7 +259,7 @@ const Sharebox = styled(CommonCard)`
   flex-direction: column;
   color: #fff;
   margin: 0 0 8px;
-  
+
   div {
     button {
       outline: none;
@@ -294,7 +314,7 @@ const Sharebox = styled(CommonCard)`
     }
   }
 
-  .clickable{
+  .clickable {
     cursor: pointer;
   }
 `;
@@ -432,7 +452,7 @@ const SocialActions = styled.div`
       height: 30px;
       padding-right: 1px;
     }
-    
+
     @media (min-width: 768px) {
       span {
         margin-left: 8px;
@@ -478,20 +498,19 @@ const CommentsList = styled.div`
 `;
 
 const Comment = styled.div`
-  
   text-align: left;
   margin-bottom: 15px;
   display: flex;
-  div{
+  div {
     border: 3px solid #001838;
     border-radius: 5px;
     width: 100%;
   }
-  img{
+  img {
     height: 40px;
-    border-radius:50%;
-    margin-right:5px;
-    margin-top:5px;
+    border-radius: 50%;
+    margin-right: 5px;
+    margin-top: 5px;
     cursor: pointer;
   }
   span {
@@ -530,8 +549,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(updateArticleLikes(articleId, userEmail)),
   addComment: (articleId, comment, userEmail, userImage) =>
     dispatch(addCommentAPI(articleId, comment, userEmail, userImage)),
-  deleteArticle: (articleId) => dispatch(deleteArticleAPI(articleId)), 
+  deleteArticle: (articleId) => dispatch(deleteArticleAPI(articleId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
-
